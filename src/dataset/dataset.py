@@ -1,4 +1,7 @@
 import yfinance as yf
+import os
+import io
+from contextlib import redirect_stdout
 
 class TickerDataset():
     """
@@ -12,18 +15,37 @@ class TickerDataset():
         self.ticker = ticker
         self.start_date = start_date
 
-    def _process_data(self, data):
+    def _check_dataset(self, data):
         
-        if data.isnull().values.any():
-            print('Data contains missing values. Replacing NaN with 0.')
-            data.fillna(0, inplace=True)
+        log_path = "./logs"
+        if not os.path.exists(log_path):
+            os.makedirs(log_path)
+
+        shape = data.shape
+        nan_count = data.isnull().sum()
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            data.info()
+        info_output = buffer.getvalue()
+
+        with open(f"{log_path}/{self.ticker}_log.txt", "w") as f:
+            f.write(f"Shape of dataset: \n {shape}\n\n")
+            f.write(f"Number of NaN values: \n {nan_count}\n\n")
+            f.write(f"Info: \n {info_output}\
+            ")
+
+    def _process_and_log_data(self, data):
+        self._check_dataset(data)
+
+        # Placeholder for when we might need to normalize, clean or preprocess the data
+
         return data
 
     def get_dataset(self):
         tckr = yf.Ticker(self.ticker)
         tckr_history = tckr.history(start=self.start_date, end=None)
-        data = self._process_data(tckr_history)
-        return data
+        dataframe = self._process_and_log_data(tckr_history)
+        return dataframe
     
 
 if __name__ == '__main__':
