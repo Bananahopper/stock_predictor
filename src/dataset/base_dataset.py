@@ -4,7 +4,7 @@ import io
 from contextlib import redirect_stdout
 
 
-class TickerDataset:
+class BaseTickerDataset:
     """
     This class gets ticker data from yahoo finance and converts it to a usable dataset for machine learning.
 
@@ -13,9 +13,12 @@ class TickerDataset:
     start_date (str): The start date of the data to get in the format 'YYYY-MM-DD'.
     """
 
-    def __init__(self, ticker: str, start_date: str):
+    def __init__(self, ticker: str, start_date: str, moving_average: int = 10):
         self.ticker = ticker
         self.start_date = start_date
+        self.moving_average = moving_average
+
+        self.data, self.data_moving_average = self.get_dataset()
 
     def _check_dataset(self, data):
 
@@ -59,13 +62,29 @@ class TickerDataset:
 
         return data
 
+    def _get_moving_average_dataset(self, data):
+        data_moving_average = data.copy(deep=True)
+
+        data_moving_average["Moving Average"] = (
+            data_moving_average["Close"].rolling(window=self.moving_average).mean()
+        )
+        data_moving_average["Moving Average"] = data_moving_average[
+            "Moving Average"
+        ].fillna(data_moving_average["Close"])
+
+        data_moving_average.reset_index(inplace=True)
+        data_moving_average["Volume"] = data_moving_average["Volume"].astype(float)
+
+        return data_moving_average
+
     def get_dataset(self):
         tckr = yf.Ticker(self.ticker)
         tckr_history = tckr.history(start=self.start_date, end=None)
-        dataframe = self._process_and_log_data(tckr_history)
-        return dataframe
+        data = self._process_and_log_data(tckr_history)
+        data_moving_average = self._get_moving_average_dataset(data)
+        return data, data_moving_average
 
 
 if __name__ == "__main__":
-    data = TickerDataset("ING", "2010-01-01").get_dataset()
-    print(data)
+    data, data_moving_average = BaseTickerDataset("ING", "2010-01-01").get_dataset()
+    print(data_moving_average.head(15))

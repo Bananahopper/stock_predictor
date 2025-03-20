@@ -1,4 +1,4 @@
-from dataset.dataset import TickerDataset
+from dataset.base_dataset import BaseTickerDataset
 from visualization.visualizations import Visualizer
 from utils.utils import read_config_file
 import argparse
@@ -11,7 +11,9 @@ if __name__ == "__main__":
 
     config = read_config_file(args.config)
 
-    data = TickerDataset(config["TICKER"], config["START_DATE"]).get_dataset()
+    data, data_moving_average = BaseTickerDataset(
+        config["TICKER"], config["START_DATE"]
+    ).get_dataset()
     visualizer = Visualizer(config["TICKER"], data)
     visualizer.plot_boxplots()
     visualizer.plot_density()
