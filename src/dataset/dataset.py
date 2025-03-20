@@ -42,6 +42,10 @@ class TickerDataset:
         self._check_dataset(data)
 
         # Placeholder for when we might need to normalize, clean or preprocess the data
+
+        # If a column has NAN values, fill them with 0
+        data = data.fillna(0)
+
         # Remove stock splits and dividens column if more than 99% of the values are 0
         if (data["Stock Splits"] == 0).sum() / len(data) > 0.99:
             data = data.drop(columns=["Stock Splits"])

@@ -1,4 +1,5 @@
 import json
+import os
 
 
 def read_config_file(config_file):
@@ -11,3 +12,14 @@ def read_config_file(config_file):
     with open(config_file, "r") as f:
         config = json.load(f)
     return config
+
+
+def create_folder_structure(save_path: str, list_of_subfolders=[]):
+
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    if list_of_subfolders != []:
+        for folder in list_of_subfolders:
+            if not os.path.exists(save_path + "/" + folder):
+                os.makedirs(save_path + "/" + folder)

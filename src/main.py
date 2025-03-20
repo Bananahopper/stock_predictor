@@ -13,5 +13,6 @@ if __name__ == "__main__":
 
     data = TickerDataset(config["TICKER"], config["START_DATE"]).get_dataset()
     visualizer = Visualizer(config["TICKER"], data)
-    visualizer.plot_boxplots(data)
-    visualizer.plot_candlestick(data)
+    visualizer.plot_boxplots()
+    visualizer.plot_density()
+    visualizer.plot_candlestick()

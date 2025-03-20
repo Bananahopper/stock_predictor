@@ -5,4 +5,5 @@ dependencies:
   - python==3.12.2
   - conda-forge::matplotlib
   - conda-forge::plotly
+  - seaborn
 prefix: /home/grogu/miniconda3/envs/stock_predictor
