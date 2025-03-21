@@ -1,4 +1,13 @@
 {
-    "TICKER": "ING",
-    "START_DATE": "2010-01-01"
+    "TICKER_SELECTION": {
+        "TICKER": "ING",
+        "START_DATE": "2010-01-01"
+    },
+    "TRAINING": {
+        "TRAIN_SIZE": 0.7,
+        "VAL_SIZE": 0.2,
+        "BATCH_SIZE": 16
+    },
+    "VISUALIZATION": false,
+    "MODE": "TRAIN"
 }
