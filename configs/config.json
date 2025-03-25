@@ -1,4 +1,31 @@
 {
-    "TICKER": "ING",
-    "START_DATE": "2010-01-01"
+    "TICKER_SELECTION": {
+        "TICKER": "ING",
+        "START_DATE": "2010-01-01"
+    },
+    "MODEL":{
+        "INPUT_SIZE": 5,
+        "HIDDEN_SIZE": 32,
+        "OUTPUT_SIZE": 1
+    },
+    "OPTIMIZER": {
+        "LEARNING_RATE": 0.001
+    },
+    "TRAINING": {
+        "TRAIN_SIZE": 0.7,
+        "VAL_SIZE": 0.2,
+        "BATCH_SIZE": 16,
+        "EPOCHS": 100,
+        "RESULT_PATH": "/home/grogu/work/stock_predictor/results",
+        "CHECKPOINT": null,
+        "LOSS": "MSE"
+    },
+    "VISUALIZATION": false,
+    "MODE": "TRAIN", 
+    "WANDB_LOG": {
+        "PROJECT_NAME": "stock_predictor",
+        "NOTES": "Stock predictor using LSTM",
+        "RUN_NAME": "stock_predictor first run",
+        "TAGS": ["MSE", "LSTM"]
+    }
 }
