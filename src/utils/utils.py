@@ -1,6 +1,8 @@
+from datetime import datetime, UTC
 import json
 import os
 import torch
+import wandb
 
 
 def read_config_file(config_file):
@@ -46,3 +48,12 @@ def get_dataloader(data_split, batch_size):
     )
 
     return loader
+
+
+def initialize_wandb(project_name, run_name, notes="", tags=""):
+    wandb.init(
+        project=project_name,
+        notes=notes,
+        name=f'{run_name}_{datetime.now(UTC).strftime("%Y-%m-%d")}',
+        tags=tags,
+    )
