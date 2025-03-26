@@ -6,4 +6,5 @@ dependencies:
   - conda-forge::matplotlib
   - conda-forge::plotly
   - seaborn
+  - conda-forge::tqdm
 prefix: /home/grogu/miniconda3/envs/stock_predictor
