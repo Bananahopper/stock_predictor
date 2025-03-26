@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
 import torch
+from sklearn.preprocessing import MinMaxScaler
 
 from dataset.base_dataset import BaseTickerDataset
 
@@ -26,7 +27,7 @@ class LSTMTickerDataset(Dataset):
         target_column: str = "Close",
     ):
 
-        self.data = data.copy().reset_index(drop=True)
+        self.data = self._normalize_data(data.copy().reset_index(drop=True))
         self.sequence_length = sequence_length
         self.target_column = target_column
         self.feature_columns = [col for col in self.data.columns if col != "Date"]
@@ -47,10 +48,27 @@ class LSTMTickerDataset(Dataset):
 
         return input_tensor, target_tensor
 
+    def _normalize_data(self, data):
+        """
+        Normalize the data using min-max scaling.
+        """
+        scaler = MinMaxScaler(feature_range=(0, 2)).fit(data.Low.values.reshape(-1, 1))
+        data["Open"] = scaler.transform(data.Open.values.reshape(-1, 1))
+        data["High"] = scaler.transform(data.High.values.reshape(-1, 1))
+        data["Low"] = scaler.transform(data.Low.values.reshape(-1, 1))
+        data["Close"] = scaler.transform(data.Close.values.reshape(-1, 1))
+        # Additional log transformation for the Volume column
+        data["Volume"] = np.log10(data.Volume)
+        data["Volume"] = scaler.transform(data.Volume.values.reshape(-1, 1))
+        data["Moving Average"] = scaler.transform(
+            data["Moving Average"].values.reshape(-1, 1)
+        )
+        return data
+
 
 if __name__ == "__main__":
     base_dataset = BaseTickerDataset(ticker="AAPL", start_date="2020-01-01")
     df = base_dataset.data_moving_average
 
     lstm_dataset = LSTMTickerDataset(data=df)
-    print(lstm_dataset[0][1])
+    print(lstm_dataset[0][0])
