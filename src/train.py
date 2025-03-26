@@ -5,6 +5,8 @@ import wandb
 import torch
 from tqdm import tqdm
 
+from plotting.plot_predictions_and_labels import plot_predictions_and_labels
+
 from utils.utils import create_folder_structure
 
 
@@ -33,7 +35,7 @@ class Trainer:
         self.checkpoint = checkpoint
         self.current_epoch = 0
 
-        create_folder_structure(self.result_path, ["train"])
+        create_folder_structure(self.result_path, ["train", "visualizations"])
 
         self.load_checkpoint()
 
@@ -76,6 +78,15 @@ class Trainer:
                 self.best_model = copy.deepcopy(self.model)
             self.save_model_checkpoint()
 
+            if epoch % 20 == 0:
+                plot_predictions_and_labels(
+                    self.validation_loader,
+                    self.model,
+                    epoch,
+                    os.path.join(self.result_path, "visualizations/validation"),
+                    self.device,
+                )
+
         print("Finished Training and Validation")
         return self.best_model, self.best_epoch
 
@@ -112,9 +123,7 @@ class Trainer:
         self.avg_epoch_loss = 0.0
 
         metrics_sum = {
-            "mae": 0.0,
             "mape": 0.0,
-            "rmse": 0.0,
             "directional_accuracy": 0.0,
         }
 
@@ -138,9 +147,7 @@ class Trainer:
 
         wandb.log(
             {
-                "val_mae": metrics_sum["mae"],
                 "val_mape": metrics_sum["mape"],
-                "val_rmse": metrics_sum["rmse"],
                 "val_directional_accuracy": metrics_sum["directional_accuracy"],
                 "val_loss": self.avg_epoch_loss,
                 "epoch": self.current_epoch,
@@ -152,17 +159,9 @@ class Trainer:
     def evaluate_accuracy(self, outputs, labels):
 
         with torch.no_grad():
-            # Mean Absolute Error
-            mae = torch.mean(torch.abs(outputs - labels)).item()
 
-            # Mean Absolute Percentage Error
             mape = torch.mean(torch.abs((labels - outputs) / labels)) * 100
 
-            # Root Mean Square Error
-            rmse = torch.sqrt(torch.mean((outputs - labels) ** 2)).item()
-
-            # Directional Accuracy (for sequential predictions)
-            # This assumes batches preserve time order
             if len(outputs) > 1:
                 pred_direction = torch.diff(outputs) > 0
                 true_direction = torch.diff(labels) > 0
@@ -172,9 +171,7 @@ class Trainer:
                 directional_accuracy = 0.0
 
         return {
-            "mae": mae,
             "mape": mape.item(),
-            "rmse": rmse,
             "directional_accuracy": directional_accuracy,
         }
 

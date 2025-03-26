@@ -41,15 +41,6 @@ def train_test_val_split(data, train_split_size, val_split_size):
     return train_data, val_data, test_data
 
 
-def get_dataloader(data_split, batch_size):
-
-    loader = torch.utils.data.DataLoader(
-        data_split, batch_size=batch_size, shuffle=True
-    )
-
-    return loader
-
-
 def initialize_wandb(project_name, run_name, notes="", tags=""):
     wandb.init(
         project=project_name,

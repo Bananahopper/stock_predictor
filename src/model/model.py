@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from dataset.base_dataset import BaseTickerDataset
 from dataset.lstm_dataset import LSTMTickerDataset
-from utils.utils import get_dataloader, train_test_val_split
+from utils.utils import train_test_val_split
 
 
 class LSTM(nn.Module):
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     train_dataset = LSTMTickerDataset(train_data)
 
-    train_loader = get_dataloader(train_dataset, 16)
+    train_loader = torch.utils.data.DataLoader(train_dataset, 16)
 
     for x, y in train_loader:
         # Print the shape of the input tensor

@@ -28,9 +28,10 @@ class LSTMTickerDataset(Dataset):
     ):
 
         self.data = self._normalize_data(data.copy().reset_index(drop=True))
+        self.data = self.data.drop(columns=["Date"])
         self.sequence_length = sequence_length
         self.target_column = target_column
-        self.feature_columns = [col for col in self.data.columns if col != "Date"]
+        self.feature_columns = [col for col in self.data.columns]
         self.target_idx = self.feature_columns.index(target_column)
 
     def __len__(self):
@@ -72,3 +73,4 @@ if __name__ == "__main__":
 
     lstm_dataset = LSTMTickerDataset(data=df)
     print(lstm_dataset[0][0])
+    print(lstm_dataset[0][1])
