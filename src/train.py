@@ -93,6 +93,9 @@ class Trainer:
             if torch.isnan(loss):
                 raise ValueError("Loss is NaN")
 
+            loss.backward()
+            self.optimizer.step()
+
             self.running_loss += loss.item()
             self.avg_epoch_loss += loss.item()
             self.log_train_metrics(idx)
