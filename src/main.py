@@ -5,7 +5,7 @@ from loss import get_loss
 from model import get_model
 from optimizer import get_optimizer
 from visualization.visualizations import Visualizer
-from utils.utils import read_config_file, train_test_val_split, get_dataloader
+from utils.utils import read_config_file, train_test_val_split
 import argparse
 from train import Trainer
 from utils.utils import initialize_wandb
@@ -57,8 +57,12 @@ def main():
         train_dataset = LSTMTickerDataset(train_data)
         val_dataset = LSTMTickerDataset(val_data)
 
-        train_loader = get_dataloader(train_dataset, config["TRAINING"]["BATCH_SIZE"])
-        val_loader = get_dataloader(val_dataset, config["TRAINING"]["BATCH_SIZE"])
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, config["TRAINING"]["BATCH_SIZE"]
+        )
+        val_loader = torch.utils.data.DataLoader(
+            val_dataset, config["TRAINING"]["BATCH_SIZE"]
+        )
 
     trainer = Trainer(
         model=model,
@@ -78,7 +82,9 @@ def main():
 
         test_dataset = LSTMTickerDataset(test_data)
 
-        test_loader = get_dataloader(test_data, config["TRAINING"]["BATCH_SIZE"])
+        test_loader = torch.utils.data.DataLoader(
+            test_data, config["TRAINING"]["BATCH_SIZE"]
+        )
 
 
 if __name__ == "__main__":

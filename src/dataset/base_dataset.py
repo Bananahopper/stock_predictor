@@ -52,7 +52,7 @@ class BaseTickerDataset:
         # Remove stock splits and dividens column if more than 99% of the values are 0
         if (data["Stock Splits"] == 0).sum() / len(data) > 0.99:
             data = data.drop(columns=["Stock Splits"])
-        if (data["Dividends"] == 0).sum() / len(data) > 0.99:
+        if (data["Dividends"] == 0).sum() / len(data) > 0.95:
             data = data.drop(columns=["Dividends"])
 
         # Set date to YYYY-MM-DD format
