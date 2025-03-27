@@ -1,8 +1,26 @@
 # Stock Predictor
 
-This repository provides code for a simple Stock Prediction model. The model uses data from Yahoo Finance to make predictions about the closing price of a ticker.
+This repository provides code for a simple Stock Prediction model. The model uses data from Yahoo Finance to make predictions about the closing price of a ticker. This repository is intended to be an educational tool to deepen one's knowledge on how an LSTM model is trained and on how it can be applied to make predictions on time series data. 
+
+## DISCLAIMER - Is this model financial advice or to be trusted to make predictions in the real stock market?
+
+Absolutely not.
 
 ## Usage
+
+Firstly, create an environment from the environment file.
+
+<conda env create --file=environment.yaml>
+
+Then, edit the configs/config.json file to your preference. If you want to train a new model on a new ticker, edit the ticker key and set the mode to "TRAIN". Else you can use the provided model that was trained on ING stock data.
+
+Finally, run the main.py file.
+
+<python src/main.py --config='path/to/config/file'>
+
+## The model
+
+The model is a slightly modified LSTM architecture. The basic LSTM is provided by PyTorch (torch.nn.LSTM). A fully connected layer was appended to the end of the LSTM, as a minor modification. 
 
 ## Accuracy Measures
 
