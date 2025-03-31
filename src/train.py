@@ -46,15 +46,14 @@ class Trainer:
         # Save checkpoint with model, optimizer, and other info
         checkpoint = {
             "epoch": self.current_epoch,
-            "model_state_dict": self.model.state_dict(),
-            "optimizer_state_dict": self.optimizer.state_dict(),
+            "model_state_dict": self.best_model.state_dict(),
         }
 
         checkpoint_path = os.path.join(
             self.result_train_path, f"model_checkpoint_{self.current_epoch}.pth"
         )
 
-        torch.save(checkpoint, checkpoint_path)
+        torch.save(checkpoint["model_state_dict"], checkpoint_path)
 
     def load_checkpoint(self):
         """
@@ -76,7 +75,7 @@ class Trainer:
                 self.best_metric = current_val
                 self.best_epoch = epoch
                 self.best_model = copy.deepcopy(self.model)
-            self.save_model_checkpoint()
+                self.save_model_checkpoint()
 
             if epoch % 20 == 0:
                 plot_predictions_and_labels(
@@ -154,7 +153,7 @@ class Trainer:
             },
             step=self.current_epoch,
         )
-        return self.avg_epoch_loss
+        return 1 - self.avg_epoch_loss
 
     def evaluate_accuracy(self, outputs, labels):
 
