@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from torch.utils.data import Dataset
 import torch
 from sklearn.preprocessing import MinMaxScaler
@@ -22,7 +21,7 @@ class LSTMTickerDataset(Dataset):
 
     def __init__(
         self,
-        data: pd.DataFrame,
+        data: np.ndarray,
         sequence_length: int = 10,
         target_column: str = "Close",
     ):

@@ -1,6 +1,6 @@
 # Stock Predictor
 
-This repository provides code for a simple Stock Prediction model. The model uses data from Yahoo Finance to make predictions about the closing price of a ticker. This repository is intended to be an educational tool to deepen one's knowledge on how an LSTM model is trained and on how it can be applied to make predictions on time series data. 
+This repository provides code for a simple Stock Prediction model. The model uses data from Yahoo Finance to make predictions about the closing price of a ticker. This repository is intended to be an educational tool to deepen one's knowledge on how an LSTM model is trained and on how it can be applied to make predictions on time series data.
 
 ## DISCLAIMER - Is this model financial advice or to be trusted to make predictions in the real stock market?
 
@@ -20,7 +20,7 @@ Finally, run the main.py file.
 
 ## The model
 
-The model is a slightly modified LSTM architecture. The basic LSTM is provided by PyTorch (torch.nn.LSTM). A fully connected layer was appended to the end of the LSTM, as a minor modification. 
+The model is a slightly modified LSTM architecture. The basic LSTM is provided by PyTorch (torch.nn.LSTM). A fully connected layer was appended to the end of the LSTM, as a minor modification.
 
 ## Accuracy Measures
 
@@ -40,7 +40,7 @@ x_i = the label value
 
 y_i = the prediction value
 
-### Directional Accuracy 
+### Directional Accuracy
 
 The Directional Accuracy shows how often the model correctly predicts if the stock price is increasing or decreasing, expressed in percentages. It is given by the following equation:
 
@@ -54,5 +54,11 @@ y_i = the prediction value
 
 x_i = the label value
 
+## Results
+
+The final model trained on ING data achieves a DA of 89% and a MAPE of 1.14 on the test set. 
+
+
 ## Acknowledgments
+
 Melissa Monfared's kaggle notebook : https://www.kaggle.com/code/melissamonfared/google-s-stock-price-prediction-lstm/notebook

@@ -1,9 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import seaborn as sns
 import numpy as np
-import pandas as pd
 from utils.utils import create_folder_structure
 
 

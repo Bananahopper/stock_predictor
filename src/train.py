@@ -111,15 +111,10 @@ class Trainer:
             self.log_train_metrics(idx)
         self.optimizer.zero_grad(set_to_none=True)
         self.avg_epoch_loss /= len(self.train_loader)
-        wandb.log(
-            {"train_loss": self.avg_epoch_loss, "epoch": self.current_epoch},
-            step=self.current_epoch,
-        )
 
     def validate(self):
         self.model.eval()
-        self.running_loss = 0.0
-        self.avg_epoch_loss = 0.0
+        self.running_loss_val = 0.0
 
         metrics_sum = {
             "mape": 0.0,
@@ -133,8 +128,7 @@ class Trainer:
             if torch.isnan(loss):
                 raise ValueError("Loss is NaN")
 
-            self.running_loss += loss.item()
-            self.avg_epoch_loss += loss.item()
+            self.running_loss_val += loss.item()
 
             batch_metrics = self.evaluate_accuracy(outputs, labels.to(self.device))
             for key in metrics_sum:
@@ -142,18 +136,18 @@ class Trainer:
 
         for key in metrics_sum:
             metrics_sum[key] /= len(self.validation_loader)
-        self.avg_epoch_loss /= len(self.validation_loader)
+        self.running_loss_val /= len(self.validation_loader)
 
         wandb.log(
             {
                 "val_mape": metrics_sum["mape"],
                 "val_directional_accuracy": metrics_sum["directional_accuracy"],
-                "val_loss": self.avg_epoch_loss,
+                "val_loss": self.running_loss_val,
                 "epoch": self.current_epoch,
             },
             step=self.current_epoch,
         )
-        return 1 - self.avg_epoch_loss
+        return 1 - self.running_loss_val
 
     def evaluate_accuracy(self, outputs, labels):
 

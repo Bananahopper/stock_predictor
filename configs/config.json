@@ -6,7 +6,7 @@
     "MODEL":{
         "NAME": "LSTM",
         "INPUT_SIZE": 5,
-        "HIDDEN_SIZE": 64,
+        "HIDDEN_SIZE": 32,
         "OUTPUT_SIZE": 1
     },
     "OPTIMIZER": {
@@ -18,12 +18,12 @@
         "VAL_SIZE": 0.2,
         "BATCH_SIZE": 32,
         "EPOCHS": 250,
-        "RESULT_PATH": "/home/grogu/work/stock_predictor/results",
-        "CHECKPOINT": null,
+        "RESULT_PATH": "./results",
+        "CHECKPOINT": "./best_model/model_ING.pth",
         "LOSS": "MSE"
     },
     "VISUALIZATION": false,
-    "MODE": "TRAIN", 
+    "MODE": "TEST", 
     "WANDB_LOG": {
         "PROJECT_NAME": "stock_predictor",
         "NOTES": "Stock predictor using LSTM",
