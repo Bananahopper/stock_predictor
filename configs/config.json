@@ -19,11 +19,11 @@
         "BATCH_SIZE": 32,
         "EPOCHS": 250,
         "RESULT_PATH": "./results",
-        "CHECKPOINT": "./best_model/model_ING.pth",
+        "CHECKPOINT": "./best_model/model_ING_2000.pth",
         "LOSS": "MSE"
     },
-    "VISUALIZATION": false,
-    "MODE": "TEST", 
+    "VISUALIZATION": true,
+    "MODE": false, 
     "WANDB_LOG": {
         "PROJECT_NAME": "stock_predictor",
         "NOTES": "Stock predictor using LSTM",

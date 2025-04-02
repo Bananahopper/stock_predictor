@@ -50,10 +50,8 @@ def main():
 
         print("Visualizing ticker data")
 
-        visualizer = Visualizer(config["TICKER_SELECTION"], data)
-        visualizer.plot_boxplots()
-        visualizer.plot_density()
-        visualizer.plot_candlestick()
+        visualizer = Visualizer(config["TICKER_SELECTION"]["TICKER"], data)
+        visualizer.plot_visualizations()
 
     if config["MODE"] == "TRAIN":
 

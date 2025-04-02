@@ -1,4 +1,5 @@
 import os
+import random
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import numpy as np
@@ -12,8 +13,17 @@ class Visualizer:
         self.save_path = save_path
 
         # Create folders for all the visualizations
-        self.folders = ["boxplots", "densities", "candlesticks"]
+        self.folders = ["boxplots", "densities", "candlesticks", "over_time"]
         create_folder_structure(self.save_path, self.folders)
+
+    def plot_visualizations(self):
+        """
+        Generate all visualizations for the ticker data.
+        """
+        self.plot_boxplots()
+        self.plot_density()
+        self.plot_candlestick()
+        self.plot_over_time()
 
     def plot_boxplots(self):
         # Filter only numeric columns and exclude specified columns
@@ -24,10 +34,8 @@ class Visualizer:
         ]
 
         for column in numeric_columns:
-            # Create figure and axis with a reasonable size
             plt.figure(figsize=(10, 6))
 
-            # Calculate statistics
             stats = {
                 "Mean": self.data[column].mean(),
                 "Std Dev": self.data[column].std(),
@@ -36,8 +44,6 @@ class Visualizer:
                 "Median": self.data[column].median(),
             }
 
-            # Use matplotlib's boxplot with default settings for outliers
-            # This only plots the outliers and not the points within quartiles
             boxplot = plt.boxplot(
                 self.data[column], vert=True, patch_artist=True, widths=0.5
             )
@@ -85,19 +91,8 @@ class Visualizer:
             plt.axhline(
                 y=stats["Mean"], color="red", linestyle="--", linewidth=1.5, alpha=0.8
             )
-
-            # Annotate mean line
-            plt.text(
-                1.05,
-                stats["Mean"],
-                "Mean",
-                verticalalignment="bottom",
-                color="red",
-                fontweight="bold",
-            )
             plt.tight_layout()
 
-            # Save figure with high DPI for better quality
             plt.savefig(
                 f"{self.save_path}/{self.folders[0]}/{column}_boxplot.png",
                 dpi=300,
@@ -187,23 +182,11 @@ class Visualizer:
             plt.axhline(
                 y=stats["Mean"], color="red", linestyle="--", linewidth=1.5, alpha=0.8
             )
-
-            # Annotate mean line
-            plt.text(
-                1.05,
-                stats["Mean"],
-                "Mean",
-                verticalalignment="bottom",
-                color="red",
-                fontweight="bold",
-            )
-
-            # Tight layout
             plt.tight_layout()
 
             # Save figure with high DPI for better quality
             plt.savefig(
-                f"{self.save_path}/{self.folders[0]}/{column}_boxplot.png",
+                f"{self.save_path}/{self.folders[1]}/{column}_density.png",
                 dpi=300,
                 bbox_inches="tight",
             )
@@ -230,3 +213,53 @@ class Visualizer:
         fig = go.Figure(data=[candlesticks], layout=layout)
         fig.update_layout(xaxis_rangeslider_visible=False)
         fig.write_image(f"{self.save_path}/{self.folders[2]}/candlestick.pdf")
+
+    def plot_over_time(self):
+        """
+        Plot all the columns in the data over time.
+        """
+        fig, axes = plt.subplots(
+            nrows=len(self.data.columns),
+            ncols=1,
+            figsize=(12, 6),
+            sharex=True,
+        )
+
+        if len(self.data.columns) == 2:
+            axes = [axes]
+
+        colour_list = [
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#d62728",
+            "#9467bd",
+        ]
+
+        for i, column in enumerate(self.data.columns):
+            if column != "Date":
+                # Date is the index
+                axes[i - 1].plot(
+                    self.data.index,
+                    self.data[column],
+                    label=column,
+                    alpha=0.7,
+                    color=colour_list[i],
+                )
+                axes[i - 1].set_title(f"{self.ticker_name} - {column}", fontsize=14)
+                if column != "Volume":
+                    axes[i - 1].set_ylabel(f"{column} ($)", fontsize=12)
+                else:
+                    axes[i - 1].set_ylabel(f"{column}", fontsize=12)
+                axes[i - 1].grid()
+                axes[i - 1].set_xticks([])
+                axes[i - 1].set_xlabel("Date", fontsize=12)
+                axes[i - 1].set_xlim(self.data.index.min(), self.data.index.max())
+                axes[i - 1].set_ylim(self.data[column].min(), self.data[column].max())
+
+        plt.tight_layout()
+        plt.savefig(
+            f"{self.save_path}/{self.folders[3]}/over_time.png",
+            dpi=300,
+            bbox_inches="tight",
+        )

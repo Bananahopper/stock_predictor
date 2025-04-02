@@ -18,6 +18,20 @@ Finally, run the main.py file.
 
 <python src/main.py --config='path/to/config/file'>
 
+## Exploratory data analysis
+
+From Yahoo Finance you can extract 7 variables about any ticker. Closeing price, Opening price, Lowest daily price, Highest daily price, Daily Volume, Dividends, and Splits.
+
+Since Dividends and Splits rarely have any information we can remove these columns from the dataset.
+
+The Open, Close, Low, and High prices follow very similar distributions as can be seen in these boxplots:
+
+These distributions are all right skewed, meaning that there are several outliers in each column. This is to be expected with financial data as the market can fluctuate quite severly in a day. These distributions being so remarkably similar indicates that the ING stock has stable trading patterns. This should make it an easy stock to create predictions for this stock.
+
+The volume distribution is also right skewed. However, the scale is distinctly different from that of the other variables, meaning that this will have to be accounted for during data transformation or it could impact the performance of the model.
+
+The similarities and distinctions described above can also be seen when you plot the data over time.
+
 ## The model
 
 The model is a slightly modified LSTM architecture. The basic LSTM is provided by PyTorch (torch.nn.LSTM). A fully connected layer was appended to the end of the LSTM, as a minor modification.
@@ -56,8 +70,7 @@ x_i = the label value
 
 ## Results
 
-The final model trained on ING data achieves a DA of 89% and a MAPE of 1.14 on the test set. 
-
+The final model trained on ING data achieves a DA of 89% and a MAPE of 1.14 on the test set.
 
 ## Acknowledgments
 
