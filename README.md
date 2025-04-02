@@ -24,13 +24,18 @@ From Yahoo Finance you can extract 7 variables about any ticker. Closeing price,
 
 Since Dividends and Splits rarely have any information we can remove these columns from the dataset.
 
-The Open, Close, Low, and High prices follow very similar distributions as can be seen in these boxplots:
+The Open, Close, Low, and High prices follow very similar distributions as can be seen in these boxplots (only close boxplot shown to save space. The others are under visuals):
+
+![Close_box](visuals/Close_boxplot.png?width=300)
+
 
 These distributions are all right skewed, meaning that there are several outliers in each column. This is to be expected with financial data as the market can fluctuate quite severly in a day. These distributions being so remarkably similar indicates that the ING stock has stable trading patterns. This should make it an easy stock to create predictions for this stock.
 
 The volume distribution is also right skewed. However, the scale is distinctly different from that of the other variables, meaning that this will have to be accounted for during data transformation or it could impact the performance of the model.
 
 The similarities and distinctions described above can also be seen when you plot the data over time.
+
+![Over_time](visuals/over_time.png)
 
 ## The model
 
@@ -44,33 +49,35 @@ To measure the accuracy of the model we used 2 measurements: Mean Absolute Perce
 
 To intuitively understand by how much the model prediction deviates from the expected value, we used the Mean Absolute Percentage Error. Given by the following equation:
 
-MAPE = \frac{1}{n} \sum_{i=1}^{n} \left| \frac{x_i - y_i}{x_i} \right| \times 100
+$$MAPE = \frac{1}{n} \sum_{i=1}^{n} \left| \frac{x_i - y_i}{x_i} \right| \times 100$$
 
 ,where
 
-n = the number of prediction, label tuples in the batch
+$n$ = the number of prediction, label tuples in the batch
 
-x_i = the label value
+$x_i$ = the label value
 
-y_i = the prediction value
+$y_i$ = the prediction value
 
 ### Directional Accuracy
 
 The Directional Accuracy shows how often the model correctly predicts if the stock price is increasing or decreasing, expressed in percentages. It is given by the following equation:
 
-Directional Accuracy = \frac{1}{n-1} \sum_{i=1}^{n-1} \mathbb{1}[\text{sign}(y_{i+1} - y_i) = \text{sign}(x_{i+1} - x_i)]
+$$Directional Accuracy = \frac{1}{n-1} \sum_{i=1}^{n-1} \mathbb{1}[\text{sign}(y_{i+1} - y_i) = \text{sign}(x_{i+1} - x_i)]$$
 
 ,where
 
-n = number of tuples in the batch
+$n$ = number of tuples in the batch
 
-y_i = the prediction value
+$y_i$ = the prediction value
 
-x_i = the label value
+$x_i$ = the label value
 
 ## Results
 
 The final model trained on ING data achieves a DA of 89% and a MAPE of 1.14 on the test set.
+
+![Predictions](visuals/predictions_vs_labels_epoch_1.png)
 
 ## Acknowledgments
 
